@@ -1,0 +1,69 @@
+<template>
+<main class="short">
+  <order-details v-on:limitOrderSubmit="limit" v-on:marketOrderSubmit="market" title="Sell/Short" side="sell" :submitting="submitting"></order-details>
+</main>
+</template>
+
+<script>
+import OrderDetails from './OrderDetails';
+export default {
+  components: { OrderDetails },
+  data() {
+    return {
+      submitting: false
+    };
+  },
+  methods: {
+    limit(data) {
+      this.submitting = true;
+      this.$bitmex.placeOrder('Sell', data).then(res => {
+        if (res.ok) {
+          this.$notify({
+            type: 'success',
+            title: 'Placed Short',
+            text:
+              'Placed sell order for ' +
+              data.quantity +
+              ' contracts @ ' +
+              data.price
+          });
+          let order = res.data.filter(o => o.ordType == 'Limit')[0];
+          this.$emit('orderSubmitted', order);
+        } else {
+          this.$notify({
+            type: 'error',
+            title: 'Error',
+            text: res.data.error.message
+          });
+        }
+        this.submitting = false;
+      });
+    },
+    market(data) {
+      this.submitting = true;
+      this.$bitmex.placeMarketOrder('Sell', data).then(res => {
+        if (res.ok) {
+          this.$notify({
+            title: 'Success',
+            type: 'success',
+            text: 'Market sold ' + data.quantity + ' contracts'
+          });
+        } else {
+          this.$notify({
+            title: 'Error',
+            type: 'error',
+            message: res.data.error.message
+          });
+        }
+        this.submitting = false;
+      });
+    }
+  }
+};
+</script>
+
+<style scoped>
+.short {
+  background: #e5603b;
+}
+</style>
