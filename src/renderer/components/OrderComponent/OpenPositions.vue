@@ -17,7 +17,7 @@
         <tr v-if="position.isOpen">
           <td>{{currentSide}}</td>
           <td>{{position.currentQty}}</td>
-          <td>{{position.realisedPnl}}</td>
+          <td>{{position.unrealisedGrossPnl}}</td>
           <td>{{position.avgEntryPrice}}</td>
           <td>{{position.liquidationPrice}}</td>
           <td>
