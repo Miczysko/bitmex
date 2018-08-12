@@ -180,7 +180,6 @@ export default {
   },
   mounted() {
     this.$bitmex.socket.$on('position', positions => {
-      console.log(positions);
       let position = positions.data[0];
       switch (positions.action) {
         case 'partial':
