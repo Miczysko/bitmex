@@ -65,8 +65,6 @@ export default {
   },
   methods: {
     cancelOrder(order) {
-      if (this.submitting) return;
-
       this.submitting = true;
       this.$bitmex.cancelOrder(order.clOrdID).then(res => {
         if (res.ok) {
@@ -80,8 +78,6 @@ export default {
       });
     },
     updateOrder(order) {
-      if (this.submitting) return;
-
       this.submitting = true;
 
       let stopOrder = this.orders.filter(o => {
@@ -181,15 +177,7 @@ export default {
         case 'update':
           orders.data.forEach(order => {
             if (!('ordStatus' in order)) {
-              if ('price' in order) {
-                let matchingOrder = this.orders.find(o => {
-                  return o.orderID === order.orderID;
-                });
-                if (matchingOrder) {
-                  matchingOrder.price = order.price;
-                  this.$store.commit('updateOrder', matchingOrder);
-                }
-              }
+              this.$store.commit('updateOrder', order);
             } else {
               if (
                 order.ordStatus === 'Canceled' ||
