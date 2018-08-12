@@ -1,7 +1,7 @@
 <template>
 <div class="fillbook">
   <div class="field"><label class="checkbox">Significant Trades<input type="checkbox" v-model="useSignificantTrades" /></label></div>
-  <iframe v-if="useSignificantTrades" src="https://tucsky.github.io/SignificantTrades/#" width="100%" height="838px" frameborder="0"></iframe>
+  <webview class="significant-trades" v-if="useSignificantTrades" src="https://tucsky.github.io/SignificantTrades/#"></webview>
   <table v-if="!useSignificantTrades" class="table is-fullwidth">
     <thead>
       <tr>
@@ -85,5 +85,9 @@ export default {
 .bigOrder.sell {
   background: red;
   color: white;
+}
+.significant-trades {
+  width: 100%;
+  height: 838px;
 }
 </style>
