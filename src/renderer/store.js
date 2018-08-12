@@ -1,5 +1,6 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
+const _ = require('lodash');
 
 Vue.use(Vuex);
 
@@ -34,9 +35,11 @@ export default new Vuex.Store({
       state.orders = orders;
     },
     updateOrder(state, order) {
-      let i = state.orders.findIndex(o => o.orderID === order.orderID);
-      if (i !== -1) {
-        state.orders[i] = order;
+      let matchingOrder = state.orders.find(o => {
+        return o.orderID === order.orderID;
+      });
+      if (matchingOrder) {
+        matchingOrder = _.assign(matchingOrder, order);
       }
     },
     removeOrder(state, id) {
