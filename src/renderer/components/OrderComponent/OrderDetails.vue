@@ -81,11 +81,12 @@ export default {
       }
     },
     placeLimitOrder() {
+      let execInstructions = this.postOnly ? 'ParticipateDoNotInitiate' : '';
       let data = {
         quantity: Number(this.quantity),
         price: Number(this.price),
         stop: Number(this.stop),
-        post: this.postOnly
+        execInst: execInstructions
       };
       this.$emit('limitOrderSubmit', data);
     },
