@@ -116,7 +116,7 @@ export default class Bitmex {
       orderQty: details.quantity,
       price: Number(details.price),
       side: side,
-      execInst: 'ParticipateDoNotInitiate',
+      execInst: details.execInst,
       clOrdID: id
     };
 
