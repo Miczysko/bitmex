@@ -49,6 +49,7 @@
 
 <script>
 import PriceInput from './../PriceInput';
+const _ = require('lodash');
 export default {
   components: {
     PriceInput
@@ -119,7 +120,8 @@ export default {
             side,
             {
               quantity: Math.abs(this.position.currentQty),
-              price: this.closePrice
+              price: this.closePrice,
+              execInst: 'ReduceOnly'
             },
             false
           )
@@ -178,17 +180,14 @@ export default {
   },
   mounted() {
     this.$bitmex.socket.$on('position', positions => {
+      console.log(positions);
       let position = positions.data[0];
       switch (positions.action) {
         case 'partial':
-          if ('isOpen' in position) {
-            this.position = position;
-          }
+          this.position = position;
           break;
         case 'update':
-          if ('isOpen' in position) {
-            this.position = position;
-          }
+          this.position = _.assign(this.position, position);
           break;
       }
     });
