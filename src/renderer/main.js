@@ -62,3 +62,14 @@ window.addEventListener(
   },
   false
 );
+
+// Remove old plaintext key storage
+const storage = require('electron-json-storage');
+storage.has('auth', (err, hasKey) => {
+  if (err) {
+    throw err;
+  }
+  if (hasKey) {
+    storage.remove('auth');
+  }
+});

@@ -4,9 +4,10 @@
     <div class="columns header">
       <div class="column">
             <ul class="nav">
-              <li v-for="route in routes">
-                  <router-link :to="route.path">{{route.name}}</router-link>
+              <li>
+                  <router-link :to="'/'">Home</router-link>
               </li>
+              <li><router-link :to="'/settings'">Settings</router-link></li>
               <li v-if="!connected" class="socket-err">Disconnected... connecting</li>
             </ul>
       </div>
