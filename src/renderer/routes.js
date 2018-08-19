@@ -24,6 +24,7 @@ export const routes = [
           Vue.prototype.$auth.key,
           Vue.prototype.$auth.secret
         );
+        Vue.prototype.$bitmex.connectSocket();
         next();
       }
     }
