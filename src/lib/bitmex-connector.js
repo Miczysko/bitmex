@@ -14,8 +14,6 @@ export default class Bitmex {
     this.proxyBaseUrl = 'http://localhost:2080/';
     this.apiUrl = 'https://www.bitmex.com';
     this.socket = new Vue();
-
-    this.connectSocket();
   }
 
   connectSocket() {
