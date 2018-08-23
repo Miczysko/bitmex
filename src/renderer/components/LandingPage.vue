@@ -2,6 +2,11 @@
   <div class="wrap">
     <div class="columns">
       <div class="column">
+        <div class="columns wallet-wrap">
+          <div class="column wallet">
+            <span class="wallet">Av: {{availableBalance}} / Total: {{totalBalance}}</span>
+          </div>
+        </div>
         <div class="columns">
           <div class="column">
             <long></long>
@@ -38,6 +43,7 @@ import OpenPositions from './OrderComponent/OpenPositions';
 import OrderBook from './Ordercomponent/OrderBook';
 import Fills from './OrderComponent/Fills';
 import Alerts from './Alerts';
+const _ = require('lodash');
 
 export default {
   name: 'bitmex-vue',
@@ -57,7 +63,24 @@ export default {
       lastPrice: 0
     };
   },
-  mounted() {}
+  computed: {
+    availableBalance() {
+      return this.$store.getters.walletAvailableInXbt;
+    },
+    totalBalance() {
+      return this.$store.getters.walletTotalInXbt;
+    }
+  },
+  mounted() {
+    this.$bitmex.socket.$on('margin', res => {
+      let wallet = res.data[0];
+      if (res.action == 'partial') {
+        this.$store.commit('createWallet', wallet);
+      } else if (res.action == 'update') {
+        this.$store.commit('updateWallet', wallet);
+      }
+    });
+  }
 };
 </script>
 
@@ -65,9 +88,17 @@ export default {
 body {
   padding: 10px;
 }
-
 .long,
 .short {
   padding: 10px;
+}
+.column.wallet {
+  padding: 0 0.75rem;
+}
+span.wallet {
+  float: right;
+}
+.columns.wallet-wrap {
+  margin-bottom: 0;
 }
 </style>

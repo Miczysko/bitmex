@@ -43,7 +43,7 @@ export default class Bitmex {
             ws.send(
               JSON.stringify({
                 op: 'subscribe',
-                args: ['order', 'position']
+                args: ['order', 'position', 'margin']
               })
             );
           }

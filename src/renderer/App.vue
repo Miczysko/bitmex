@@ -21,11 +21,10 @@ import { routes } from './routes';
 export default {
   data() {
     return {
-      routes: routes
+      routes: routes,
+      availableBalance: 0,
+      totalBalance: 0
     };
-  },
-  mounted() {
-    this.$router.push('/');
   },
   computed: {
     connected() {

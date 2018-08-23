@@ -56,7 +56,6 @@ export default {
   },
   data() {
     return {
-      position: {},
       closePrice: 0,
       closeOrderId: ''
     };
@@ -70,6 +69,9 @@ export default {
     },
     ask() {
       return this.$store.state.quote.ask.price;
+    },
+    position() {
+      return this.$store.state.position;
     }
   },
   watch: {
@@ -137,7 +139,7 @@ export default {
               });
 
               if (autoFollow == true) {
-                order.followMax = 0;
+                order.trailLimit = 0;
                 order.originalPrice = this.closePrice;
                 this.$store.commit('addOrderToAutoUpdate', order);
               }
@@ -183,10 +185,10 @@ export default {
       let position = positions.data[0];
       switch (positions.action) {
         case 'partial':
-          this.position = position;
+          this.$store.commit('createPosition', position);
           break;
         case 'update':
-          this.position = _.assign(this.position, position);
+          this.$store.commit('updatePosition', position);
           break;
       }
     });
