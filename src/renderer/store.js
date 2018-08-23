@@ -1,6 +1,7 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
 const _ = require('lodash');
+import helpers from './../lib/helpers';
 
 Vue.use(Vuex);
 
@@ -19,7 +20,9 @@ export default new Vuex.Store({
     lastPrice: 0,
     orders: [],
     connected: false,
-    ordersToAutoUpdate: []
+    ordersToAutoUpdate: [],
+    wallet: {},
+    position: {}
   },
   mutations: {
     updateQuoteBid(state, bid) {
@@ -64,6 +67,26 @@ export default new Vuex.Store({
       if (i !== -1) {
         state.ordersToAutoUpdate.splice(i, 1);
       }
+    },
+    createWallet(state, wallet) {
+      state.wallet = wallet;
+    },
+    updateWallet(state, wallet) {
+      state.wallet = _.assign(state.wallet, wallet);
+    },
+    createPosition(state, position) {
+      state.position = position;
+    },
+    updatePosition(state, position) {
+      state.position = _.assign(state.position, position);
+    }
+  },
+  getters: {
+    walletTotalInXbt: state => {
+      return helpers.round(state.wallet.walletBalance / 100000000, 8);
+    },
+    walletAvailableInXbt: state => {
+      return helpers.round(state.wallet.availableMargin / 100000000, 8);
     }
   }
 });

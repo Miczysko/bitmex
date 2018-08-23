@@ -148,7 +148,7 @@ export default {
   watch: {
     bid() {
       this.toAutoUpdate.filter(o => o.side === 'Buy').forEach(o => {
-        if (this.bid - o.originalPrice <= o.followMax || o.followMax == 0) {
+        if (this.bid - o.originalPrice <= o.trailLimit || o.trailLimit == 0) {
           o.newPrice = this.bid;
           o.newStop = o.stop;
           this.updateOrder(o);
@@ -157,7 +157,7 @@ export default {
     },
     ask() {
       this.toAutoUpdate.filter(o => o.side === 'Sell').forEach(o => {
-        if (o.originalPrice - this.ask <= o.followMax || o.followMax == 0) {
+        if (o.originalPrice - this.ask <= o.trailLimit || o.trailLimit == 0) {
           o.newPrice = this.ask;
           o.newStop = o.stop;
           this.updateOrder(o);
@@ -181,7 +181,8 @@ export default {
             } else {
               if (
                 order.ordStatus === 'Canceled' ||
-                order.ordStatus === 'Filled'
+                order.ordStatus === 'Filled' ||
+                order.ordStatus === 'Rejected'
               ) {
                 let removeIndex = this.orders.findIndex(o => {
                   return o.orderID === order.orderID;
