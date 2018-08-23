@@ -121,7 +121,7 @@ export default {
             {
               quantity: Math.abs(this.position.currentQty),
               price: this.closePrice,
-              execInst: 'ReduceOnly'
+              execInst: 'ReduceOnly,ParticipateDoNotInitiate'
             },
             false
           )
