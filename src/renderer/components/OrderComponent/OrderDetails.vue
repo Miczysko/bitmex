@@ -93,7 +93,7 @@
           <div class="column">
             <div class="field has-addons">
               <p class="control is-expanded has-icons-right">
-                <input class="input" type="text" v-model="quantity" v-on:input="onQuantityInput" name="quantity" />
+                <price-input class="input" type="text" v-model="quantity" v-on:input="onQuantityInput" name="quantity" />
                     <span v-if="this.locked == 'quantity'" class="icon is-small is-right">
                       <font-awesome-icon icon="lock" />
                     </span>
@@ -222,7 +222,9 @@ export default {
         this.side == 'buy'
           ? Number(this.price) / Number(stopPrice) - 1
           : Number(stopPrice) / Number(this.price) - 1;
-      stopPercentage = helpers.round(stopPercentage, 4);
+
+      stopPercentage += Number(this.fees);
+
       this.quantity = Math.round(riskInUsd / stopPercentage);
     },
     calculateQuantityPercentage() {
@@ -257,7 +259,10 @@ export default {
           ? Number(this.price) / Number(stopPrice) - 1
           : Number(stopPrice) / Number(this.price) - 1;
       stopPercentage = helpers.round(stopPercentage, 4);
-      this.risk = helpers.round(this.quantity * stopPercentage / this.price, 8);
+      this.risk = helpers.round(
+        this.quantity * (stopPercentage + Number(this.fees)) / this.price,
+        8
+      );
     },
     calculateRiskPercentage() {
       this.riskPercentage = this.risk / this.wallet * 100;
@@ -340,6 +345,17 @@ export default {
     },
     marginCost() {
       return helpers.round(this.cost / this.leverage, 8);
+    },
+    preferences() {
+      return this.$store.getters.preferences;
+    },
+    fees() {
+      let takerFee = this.preferences.discounted ? 0.0675 : 0.075;
+      let makerRebate = this.preferences.discounted ? 0.0225 : 0.025;
+
+      return this.orderType == 'limit'
+        ? (takerFee - makerRebate) / 100
+        : takerFee * 2 / 100;
     }
   },
   watch: {
@@ -368,6 +384,11 @@ export default {
     },
     wallet() {
       this.calculateRiskFromPercentage();
+    },
+    orderType() {
+      this.calculateQuantity();
+      this.calculateTotal();
+      this.calculateStop();
     }
   }
 };

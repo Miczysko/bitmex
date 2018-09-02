@@ -21,6 +21,14 @@
     <div class="field">
       <button class="button is-dark is-fullwidth" v-on:click="save" :disabled="submitting">Submit</button>
     </div>
+    <hr />
+    <h2 class="title is-4">Preferences</h2>
+    <div class="field">
+      <label class="label checkbox">
+        Discounted fees
+        <input type="checkbox" v-model="preferences.discounted" v-on:change="savePreferences" />
+      </label>
+    </div>
   </div>
 </div>
 </template>
@@ -58,15 +66,15 @@ export default {
         Vue.prototype.$auth = null;
         this.$router.push('/');
       }
+    },
+    savePreferences() {
+      this.$store.commit('setPreferences', this.preferences);
     }
   },
-  mounted() {
-    /*const auth = storage.get('auth.v2');
-    if (auth.status) {
-      let keys = encrypt.decrypt();
-      this.key = auth.data.key;
-      this.secret = auth.data.secret;
-    } */
+  computed: {
+    preferences() {
+      return this.$store.getters.preferences;
+    }
   }
 };
 </script>

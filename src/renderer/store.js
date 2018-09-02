@@ -1,5 +1,6 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
+const storage = require('electron-json-storage-sync');
 const _ = require('lodash');
 import helpers from './../lib/helpers';
 
@@ -22,7 +23,13 @@ export default new Vuex.Store({
     connected: false,
     ordersToAutoUpdate: [],
     wallet: {},
-    position: {}
+    position: {},
+    preferences: null,
+    defaultPreferences: {
+      discounted: false,
+      significantTrades: false
+    },
+    positionHistory: []
   },
   mutations: {
     updateQuoteBid(state, bid) {
@@ -79,6 +86,14 @@ export default new Vuex.Store({
     },
     updatePosition(state, position) {
       state.position = _.assign(state.position, position);
+    },
+    setPreferences(state, data) {
+      state.preferences = data;
+      storage.set('preferences', data);
+    },
+    addToPositionHistory(state, data) {
+      state.positionHistory.push(data);
+      storage.set('positionHistory', state.positionHistory);
     }
   },
   getters: {
@@ -87,6 +102,26 @@ export default new Vuex.Store({
     },
     walletAvailableInXbt: state => {
       return helpers.round(state.wallet.availableMargin / 100000000, 8);
+    },
+    preferences: state => {
+      if (!state.preferences) {
+        let prefs = storage.get('preferences');
+        if (prefs.status) {
+          state.preferences = prefs.data;
+        } else {
+          return state.defaultPreferences;
+        }
+      }
+      return state.preferences;
+    },
+    positionHistory: state => {
+      if (state.positionHistory.length == 0) {
+        let p = storage.get('positionHistory');
+        if (p.status) {
+          state.positionHistory = p.data;
+        }
+      }
+      return state.positionHistory;
     }
   }
 });
