@@ -1,8 +1,8 @@
 <template>
 <div class="fillbook">
-  <div class="field"><label class="checkbox">Significant Trades<input type="checkbox" v-model="useSignificantTrades" /></label></div>
-  <webview class="significant-trades" v-if="useSignificantTrades" src="https://tucsky.github.io/SignificantTrades/#"></webview>
-  <table v-if="!useSignificantTrades" class="table is-fullwidth">
+  <div class="field"><label class="checkbox">Significant Trades<input type="checkbox" v-model="preferences.significantTrades" v-on:change="savePrefs" /></label></div>
+  <webview class="significant-trades" v-if="preferences.significantTrades" src="https://tucsky.github.io/SignificantTrades/#"></webview>
+  <table v-if="!preferences.significantTrades" class="table is-fullwidth">
     <thead>
       <tr>
         <th>Price</th>
@@ -48,6 +48,9 @@ export default {
   methods: {
     formatTime(timestamp) {
       return moment(timestamp).format('HH:mm:ss');
+    },
+    savePrefs() {
+      this.$store.commit('setPreferences', this.preferences);
     }
   },
   watch: {
@@ -55,6 +58,11 @@ export default {
       if (this.fills.length > 100) {
         this.fills.length = 100;
       }
+    }
+  },
+  computed: {
+    preferences() {
+      return this.$store.getters.preferences;
     }
   }
 };
