@@ -24,7 +24,6 @@ export default class Bitmex {
     ws.onopen = () => {
       console.log('connected to bitmex socket');
       store.commit('setConnected', true);
-
       const expires = new Date().getTime() + 60 * 1000; // 1 min in the future
       const signature = crypto
         .createHmac('sha256', this.secret)
@@ -60,12 +59,27 @@ export default class Bitmex {
         clearTimeout(this.timer);
       }
       this.timer = setTimeout(() => {
-        console.log('Socket connection lost, trying to reconnect...');
-        ws.terminate();
-        this.connectSocket();
-        store.commit('setConnected', false);
-      }, 10000);
+        console.log('Connection might be lost, pinging....');
+        ws.ping();
+        this.timer = setTimeout(() => {
+          this.reconnectSocket();
+        }, 5000);
+      }, 5000);
     });
+
+    ws.on('pong', res => {
+      console.log('Received pong...');
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+    });
+  }
+
+  reconnectSocket() {
+    console.log('Socket connection lost, trying to reconnect...');
+    ws.terminate();
+    this.connectSocket();
+    store.commit('setConnected', false);
   }
 
   getBalance() {
