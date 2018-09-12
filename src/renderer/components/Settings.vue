@@ -56,8 +56,8 @@ export default {
     save() {
       this.submitting = true;
 
-      let s = this.key + ',' + this.secret;
-      const auth = encrypt.encrypt(s, this.password);
+      let s = { key: this.key, secret: this.secret };
+      const auth = encrypt.encrypt(JSON.stringify(s), this.password);
       const res = storage.set('auth.v2', auth);
 
       if (res.status) {

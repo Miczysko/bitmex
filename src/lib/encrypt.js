@@ -13,9 +13,6 @@ export const encrypt = {
     let decipher = crypto.createDecipher(algo, password);
     let dec = decipher.update(cryptedText, 'hex', 'utf8');
     dec += decipher.final('utf8');
-
-    let separated = dec.split(',');
-
-    return { key: separated[0], secret: separated[1] };
+    return JSON.parse(dec);
   }
 };
