@@ -95,7 +95,7 @@ export default {
   color: white;
 }
 .significant-trades {
-  width: 100%;
+  max-width: 100%;
   height: 838px;
 }
 </style>

@@ -11,6 +11,7 @@ import App from './App';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { webFrame } from 'electron';
 
 library.add(faLock);
 
@@ -70,6 +71,17 @@ window.addEventListener(
   },
   false
 );
+
+window.addEventListener('keypress', e => {
+  if (e.key == '-') {
+    let z = webFrame.getZoomFactor();
+    webFrame.setZoomFactor(z - 0.1);
+  }
+  if (e.key == '+') {
+    let z = webFrame.getZoomFactor();
+    webFrame.setZoomFactor(z + 0.1);
+  }
+});
 
 // Remove old plaintext key storage
 const storage = require('electron-json-storage');
